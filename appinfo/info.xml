@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<info>
+	<id>user_hiorg</id>
+	<name>Hiorg Server</name>
+	<description>Integration of Hiorg-Server into OwnCloud inclusive user backend.</description>
+	<version>0.1.0</version>
+	<licence>AGPL</licence>
+	<author>Klaus Herberth</author>
+	<requiremin>7</requiremin>
+	<types>
+		<type>prelogin</type>
+		<type>authentication</type>
+	</types>
+</info>
