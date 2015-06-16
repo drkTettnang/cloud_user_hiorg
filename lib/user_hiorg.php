@@ -153,6 +153,10 @@ class OC_USER_HIORG extends OC_User_Backend {
    public function countUsers() {
       return $this->_realBackend->countUsers ();
    }
+   
+   public function getBackendName() {
+      return "HiOrg-Server";
+   }
 }
 
 ?>
