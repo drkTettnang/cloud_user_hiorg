@@ -31,6 +31,9 @@ class OC_USER_HIORG extends OC_User_Backend {
    private $_realBackend = null;
    const URL = 'https://www.hiorg-server.de/';
    const SSOURL = 'https://www.hiorg-server.de/logmein.php';
+   const AJAXLOGIN = 'https://www.hiorg-server.de/ajax/login.php';
+   const AJAXCONTACT = 'https://www.hiorg-server.de/ajax/getcontacts.php';
+   const AJAXMISSION = 'https://www.hiorg-server.de/ajax/geteinsatzliste.php';
 
    public function __construct() {
       $this->_realBackend = new OC_User_Database ();
@@ -138,7 +141,11 @@ class OC_USER_HIORG extends OC_User_Backend {
             OC_Log::write ( 'user_hiorg', "New user ($uid) created.", OC_Log::INFO );
          } else {
             OC_Log::write ( 'user_hiorg', "Could not create user ($uid).", OC_Log::WARN );
+
+            return false;
          }
+      } else {
+         //@TODO update password
       }
       
       $this->_realBackend->setDisplayName ( $uid, $userinfo ['vorname'] . ' ' . $userinfo ['name'] );
@@ -146,6 +153,57 @@ class OC_USER_HIORG extends OC_User_Backend {
       \OC::$server->getSession ()->set ( 'user_hiorg_token', $token );
       
       OC_Log::write ( 'user_hiorg', "Correct password for $username ($uid).", OC_Log::INFO );
+      
+      // request group information      
+      $ajaxcontext = stream_context_create ( array (
+            'http' => array (
+                  'method' => 'POST',
+                  'header' => 'Content-type: application/x-www-form-urlencoded',
+                  'content' => http_build_query ( array (
+                        'username' => $username,
+                        'passmd5' => md5($password),
+                        'ov' => OCP\Config::getAppValue ( 'user_hiorg', 'ov' )
+                  ), '', '&' ) 
+            ) 
+      ) );
+      
+      $ajaxresult = file_get_contents ( self::AJAXLOGIN, false, $ajaxcontext );
+      OC_Log::write ( 'user_hiorg', $ajaxresult, OC_Log::INFO );
+      $ajaxdata = json_decode ( $ajaxresult );
+      
+      if (is_null($ajaxdata)) {
+         OC_Log::write ( 'user_hiorg', "Could not unserialize ajaxdata.", OC_Log::WARN );
+         
+         return false;
+      }
+      
+      if ($ajaxdata->status !== 'OK') {
+         OC_Log::write ( 'user_hiorg', "Could not login through rest api: ".$ajaxdata['status'], OC_Log::WARN );
+         
+         return false;
+      }
+      
+      $userGroups = OC_Group::getUserGroups($uid);
+      $remoteGroups = array();
+
+      foreach ($ajaxdata->grp as $grp) {
+         $gid = $grp->n;
+         $remoteGroups[] = $gid;
+         
+         if (!OC_Group::groupExists($gid)) {
+            OC_Group::createGroup($gid);
+         }
+         
+         if (!OC_Group::inGroup($uid, $gid)) {
+            OC_Group::addToGroup($uid, $gid);
+         }
+      }
+      
+      // remove non-remote group memberships
+      $groupsToRemove = array_diff($userGroups, $remoteGroups);
+      foreach ($groupsToRemove as $gid) {
+         OC_Group::removeFromGroup($uid, $gid);
+      }
       
       return $uid;
    }
