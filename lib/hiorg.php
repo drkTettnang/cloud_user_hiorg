@@ -160,6 +160,9 @@ class HIORG {
       // set display name
       $backend->setDisplayName ( $uid, $userinfo ['vorname'] . ' ' . $userinfo ['name'] );
       
+      // set email address
+      OCP\Config::setUserValue($uid, 'settings', 'email', $userinfo['email']);
+      
       // update group memberships    
       self::syncGroupMemberships($uid, self::getUserData($username, $password));
 
