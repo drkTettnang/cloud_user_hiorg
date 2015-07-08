@@ -21,6 +21,7 @@
  *
  */
 
+require_once OC_App::getAppPath('user_hiorg').'/lib/hiorg.php';
 require_once OC_App::getAppPath('user_hiorg').'/lib/user_hiorg.php';
 
 OCP\Util::connectHook('OC_User', 'logout', '\OCA\user_hiorg\Hooks', 'logout');

@@ -28,7 +28,7 @@ class Hooks {
       $token = \OC::$server->getSession ()->get ( 'user_hiorg_token' );
       
       if (isset ( $token )) {
-         $url = \OC_USER_HIORG::SSOURL . "?logout=1&token=$token";
+         $url = \HIORG::SSOURL . "?logout=1&token=$token";
          
          file_get_contents ( $url );
          
