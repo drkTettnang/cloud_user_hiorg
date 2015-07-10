@@ -47,7 +47,7 @@ class HIORG {
     * 
     * @param  {string} $msg Message
     */
-   private static function warn($msg) {
+   public static function warn($msg) {
       OC_Log::write ( 'user_hiorg', $msg, OC_Log::WARN );
    }
    
@@ -56,7 +56,7 @@ class HIORG {
     * 
     * @param  {string} $msg Message
     */
-   private static function info($msg) {
+   public static function info($msg) {
       OC_Log::write ( 'user_hiorg', $msg, OC_Log::INFO );
    }
    
