@@ -302,7 +302,7 @@ class HIORG {
     * @param {string} $uid user id
     * @param {object} $data user data
     */
-   private static function syncGroupMemberships($uid, $data) {
+   public static function syncGroupMemberships($uid, $data) {
       if ($data === false) {
          self::warn('Could not sync group memberships, because no valid user data was provided.');
          
@@ -311,24 +311,31 @@ class HIORG {
 
       $userGroups = OC_Group::getUserGroups($uid);
       $remoteGroups = array();
+      $userGroupKey = intval($data->env->grp);
 
       foreach ($data->grp as $grp) {
          $gid = $grp->n;
-         $remoteGroups[] = $gid;
+         $gkey = intval($grp->i);
          
          if (!OC_Group::groupExists($gid)) {
             OC_Group::createGroup($gid);
          }
          
-         if (!OC_Group::inGroup($uid, $gid)) {
-            OC_Group::addToGroup($uid, $gid);
+         if (($userGroupKey & $gkey) === $gkey) {
+            if (!OC_Group::inGroup($uid, $gid)) {
+               OC_Group::addToGroup($uid, $gid);
+            }
+            
+            $remoteGroups[] = $gid;
          }
       }
 
       // remove non-remote group memberships
       $groupsToRemove = array_diff($userGroups, $remoteGroups);
       foreach ($groupsToRemove as $gid) {
-         OC_Group::removeFromGroup($uid, $gid);
+         if ($gid !== 'admin') {
+            OC_Group::removeFromGroup($uid, $gid);
+         }
       }
       
       self::info('Group memberships successfully synced.');
