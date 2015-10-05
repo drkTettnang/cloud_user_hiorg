@@ -3,7 +3,7 @@
 	<id>user_hiorg</id>
 	<name>Hiorg Server</name>
 	<description>Integration of Hiorg-Server into OwnCloud inclusive user backend.</description>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 	<licence>AGPL</licence>
 	<author>Klaus Herberth</author>
 	<requiremin>8.1</requiremin>
