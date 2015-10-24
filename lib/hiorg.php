@@ -48,7 +48,7 @@ class HIORG {
     * @param  {string} $msg Message
     */
    public static function warn($msg) {
-      OC_Log::write ( 'user_hiorg', $msg, OC_Log::WARN );
+      OCP\Util::writeLog( 'user_hiorg', $msg, OCP\Util::WARN );
    }
    
    /**
@@ -57,7 +57,7 @@ class HIORG {
     * @param  {string} $msg Message
     */
    public static function info($msg) {
-      OC_Log::write ( 'user_hiorg', $msg, OC_Log::INFO );
+      OCP\Util::writeLog( 'user_hiorg', $msg, OCP\Util::INFO );
    }
    
    /**
@@ -205,7 +205,7 @@ class HIORG {
       ) );
       
       $result = file_get_contents ( self::SSOURL . '?' . $reqParam, false, $context );
-      
+
       if (mb_substr ( $result, 0, 2 ) != 'OK') {
          self::info('Wrong HIORG password.');
          
