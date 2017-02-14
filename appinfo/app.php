@@ -26,13 +26,16 @@ require_once OC_App::getAppPath('user_hiorg').'/lib/user_hiorg.php';
 
 OCP\Util::connectHook('OC_User', 'logout', '\OCA\user_hiorg\Hooks', 'logout');
 
-OC_User::clearBackends();
-OC_User::registerBackend("HIORG");
-OC_User::useBackend( "HIORG" );
+$userManager = \OC::$server->getUserManager();
+$userManager->clearBackends();
+$userBackend = new OCA\user_hiorg\User_HiOrg();
+$userManager->registerBackend($userBackend);
+//$userManager->useBackend( "HIORG" );
+// OC_User::useBackend($userBackend);
 
 OCP\App::registerAdmin( 'user_hiorg', 'settings' );
 
-OCP\App::addNavigationEntry( array( 
+OCP\App::addNavigationEntry( array(
 	'id' => 'user_hiorg',
 	'order' => 74,
 	'href' => OCP\Util::linkTo( 'user_hiorg', 'index.php' ),

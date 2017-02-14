@@ -1,6 +1,6 @@
-<?php 
+<?php
 echo 'OK: '.base64_encode(serialize(array(
-		'ov' => 'xxx',
+		'ov' => 'ttt',
 		'name' => 'Bar',
 		'vorname' => 'Foo',
 		'kuerzel' => 'FooBa',
