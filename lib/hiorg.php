@@ -154,7 +154,10 @@ class HIORG {
          }
       } else {
          // update password
-         $backend->setPassword($uid, $password);
+         if ($backend->setPassword($uid, $password))
+            self::info("Password updated.");
+         else
+            self::info("Password update failed!");
       }
 
       self::info("Correct password for $username ($uid).");

@@ -114,7 +114,7 @@ class User_HiOrg implements \OCP\UserInterface {
    }
 
    public function getBackendName() {
-      return "HiOrg-Server";
+      return "HiOrg";
    }
 }
 
