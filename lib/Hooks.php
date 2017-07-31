@@ -20,21 +20,20 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\user_hiorg;
+namespace OCA\User_Hiorg;
 
-class Hooks {
+class Hooks
+{
+	public static function logout()
+	{
+		$token = \OC::$server->getSession()->get('user_hiorg_token');
 
-   public static function logout() {
-      $token = \OC::$server->getSession ()->get ( 'user_hiorg_token' );
+		if (isset($token)) {
+			$url = \OCA\User_Hiorg\HIORG::SSOURL . "?logout=1&token=$token";
 
-      if (isset ( $token )) {
-         $url = \OCA\user_hiorg\HIORG::SSOURL . "?logout=1&token=$token";
+			file_get_contents($url);
 
-         file_get_contents ( $url );
-
-         \OC::$server->getSession ()->remove ( 'user_hiorg_token' );
-      }
-   }
+			\OC::$server->getSession()->remove('user_hiorg_token');
+		}
+	}
 }
-
-?>

@@ -12,7 +12,9 @@
 		<session/>
    </types>
 	<dependencies>
-		<owncloud min-version="9.1.0"/>
-		<nextcloud min-version="10.0" max-version="11" />
+		<owncloud min-version="10"/>
+		<nextcloud min-version="11.0" max-version="13" />
 	</dependencies>
+
+	<namespace>User_Hiorg</namespace>
 </info>
