@@ -23,7 +23,7 @@ class Application extends App
 
 		$container->registerService('Hiorg_Cache', function (IContainer $c) {
 			return new Cache(
-				$c->query('DatabaseConnection')
+				$c->query('ServerContainer')->getDatabaseConnection()
 			);
 		});
 
