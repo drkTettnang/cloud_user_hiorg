@@ -30,7 +30,7 @@ class Application extends App
 		$container->registerService('Hiorg_Logger', function (IContainer $c) {
 			return new LoggerProxy(
 				$c->query('AppName'),
-				$c->query('Logger')
+				$c->query('ServerContainer')->getLogger()
 			);
 		});
 
