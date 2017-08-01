@@ -25,6 +25,7 @@ matrix:
       env: DB=mysql BRANCH=stable12
 
 install:
+ - ls
  - which mysql && until mysql -u root -e "show status" &>/dev/null; do sleep 1; done
  - createuser -U travis -s oc_autotest
  - mysql -e 'create database oc_autotest;'
@@ -32,10 +33,11 @@ install:
  - mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost';"
  - cd ..
  - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $BRANCH nextcloud
- - mv jsxc.nextcloud nextcloud/apps/ojsxc
+ - mv owncloud_user_hiorg nextcloud/apps/user_hiorg
+ - ls
  - ./nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
- - ./nextcloud/occ app:enable ojsxc
- - cd nextcloud/apps/ojsxc
+ - ./nextcloud/occ app:enable user_hiorg
+ - cd nextcloud/apps/user_hiorg
 
 # Note the install script should make sure we are in the apps/ojsxc directory
 script:
@@ -43,7 +45,7 @@ script:
   - ./vendor/bin/phpunit -c phpunit.xml --coverage-clover=unit-coverage.xml
   - cat ../../data/nextcloud.log
   - vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
-  - rm -r build/ && rm -r vendor/ && ../../occ app:check-code ojsxc
+  - rm -r build/ && rm -r vendor/ && ../../occ app:check-code user_hiorg
 
 #after_success:
 #  - bash <(curl -s https://codecov.io/bash)
