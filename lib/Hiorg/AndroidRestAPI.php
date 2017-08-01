@@ -12,14 +12,14 @@ class AndroidRestAPI implements IAndroidRestAPI
 	const AJAXMISSION = 'https://www.hiorg-server.de/ajax/geteinsatzliste.php';
 
 	private $logger;
-   private $config;
+	private $config;
 
 	public function __constructor(
 		ILogger $logger,
-      IConfig $config
+	  IConfig $config
 	) {
 		$this->logger = $logger;
-      $this->config = $config;
+		$this->config = $config;
 	}
 
 	public function getUserData($username, $password)

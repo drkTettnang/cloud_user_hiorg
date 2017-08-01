@@ -59,6 +59,8 @@ class Hiorg
 
 	public function checkPassword($username, $password)
 	{
+		$this->logger->debug('Use Hiorg to check password.');
+
 		$uid = $this->cache->getUid($username);
 
 		// try cached credentials, if still valid

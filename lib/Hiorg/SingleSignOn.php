@@ -13,7 +13,7 @@ class SingleSignOn implements ISingleSignOn
 	private $logger;
 	private $config;
 
-	public function __constructor(
+	public function __construct(
 		ILogger $logger,
 		IConfig $config
 	) {

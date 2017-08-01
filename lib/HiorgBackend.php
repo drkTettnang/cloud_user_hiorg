@@ -10,49 +10,50 @@ use OCA\User_Hiorg\User\Proxy;
 use OCA\User_Hiorg\User\Hiorg;
 use OC\User\Database;
 
-class HiorgBackend {
-   public static function register() {
+class HiorgBackend
+{
+	public static function register()
+	{
+		$userManager = \OC::$server->getUserManager();
 
-      $userManager = \OC::$server->getUserManager();
+		$cache = new Cache(
+		  \OC::$server->getDatabaseConnection()
+	  );
 
-      $cache = new Cache(
-      	\OC::$server->getDatabaseConnection()
-      );
+		$logger = new LoggerProxy(
+		  'user_hiorg',
+		  \OC::$server->getLogger()
+	  );
 
-      $logger = new LoggerProxy(
-      	'user_hiorg',
-      	\OC::$server->getLogger()
-      );
-\OC::$server->getLogger()->info('foobar');
-      $restAPI = new AndroidRestAPI(
-      	$logger
-      );
+		$restAPI = new AndroidRestAPI(
+		  $logger
+	  );
 
-      $singleSO = new SingleSignOn(
-      	$logger,
-      	\OC::$server->getConfig()
-      );
+		$singleSO = new SingleSignOn(
+		  $logger,
+		  \OC::$server->getConfig()
+	  );
 
-      $realBackend = new Database();
+		$realBackend = new Database();
 
-      $hiorgBackend = new Hiorg(
-         $realBackend,
-         $cache,
-         $logger,
-         \OC::$server->getConfig(),
-         $userManager,
-         \OC::$server->getGroupManager(),
-         $restAPI,
-         $singleSO
-      );
+		$hiorgBackend = new Hiorg(
+		 $realBackend,
+		 $cache,
+		 $logger,
+		 \OC::$server->getConfig(),
+		 $userManager,
+		 \OC::$server->getGroupManager(),
+		 $restAPI,
+		 $singleSO
+	  );
 
-      $userBackend = new Proxy(
-      	$logger,
-         $realBackend,
-         $hiorgBackend
-      );
+		$userBackend = new Proxy(
+		  $logger,
+		 $realBackend,
+		 $hiorgBackend
+	  );
 
-      $userManager->clearBackends();
-      $userManager->registerBackend($userBackend);
-   }
+		$userManager->clearBackends();
+		$userManager->registerBackend($userBackend);
+	}
 }

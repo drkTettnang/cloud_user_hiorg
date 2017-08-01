@@ -1,11 +1,16 @@
 <?php
 
-// require_once OC_App::getAppPath('user_hiorg').'/lib/hiorg.php';
-// require_once OC_App::getAppPath('user_hiorg').'/lib/user_hiorg.php';
+use OCA\User_Hiorg\AppInfo\Application;
 
 // OCP\Util::connectHook('OC_User', 'logout', '\OCA\user_hiorg\Hooks', 'logout');
 
-OCA\User_Hiorg\HiorgBackend::register();
+$app = new Application();
+$container = $app->getContainer();
+// $container->query('UserHooks')->register();
+
+$userManager = \OC::$server->getUserManager();
+$userManager->clearBackends();
+$userManager->registerBackend($container->query('Proxy_Backend'));
 
 // OCP\App::addNavigationEntry( array(
 // 	'id' => 'user_hiorg',

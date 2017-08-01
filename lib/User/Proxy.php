@@ -7,7 +7,7 @@ use OCP\ILogger;
 
 class Proxy implements UserInterface
 {
-	private $_realBackend = null;
+	private $realBackend = null;
 	private $hiorg;
 
 	public function __construct(
@@ -18,11 +18,13 @@ class Proxy implements UserInterface
 		$this->logger = $logger;
 		$this->realBackend = $realBackend;
 		$this->hiorgBackend = $hiorgBackend;
+
+		$this->logger->info('Proxy Backend created');
 	}
 
 	public function implementsActions($actions)
 	{
-		$this->hiorgBackend->implementsActions($actions);
+		return $this->hiorgBackend->implementsActions($actions);
 	}
 
 	public function deleteUser($uid)
@@ -62,6 +64,8 @@ class Proxy implements UserInterface
 
 	public function checkPassword($username, $password)
 	{
+		$this->logger->debug('Check password for '.$username);
+
 		if ($this->realBackend->userExists($username)) {
 			$this->logger->info('Use real backend.');
 

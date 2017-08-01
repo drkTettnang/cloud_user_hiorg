@@ -1,7 +1,8 @@
 <?php
 
-interface IHiorgUserBackend {
-   public function createUser($uid, $password);
+interface IHiorgUserBackend
+{
+	public function createUser($uid, $password);
 	public function deleteUser($uid);
 	public function setPassword($uid, $password);
 	public function setDisplayName($uid, $displayName);
