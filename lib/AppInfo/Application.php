@@ -46,7 +46,9 @@ class Application extends App
 		$container->registerService('Hiorg_SingleSignOn', function (IContainer $c) {
 			return new SingleSignOn(
 				$c->query('Hiorg_Logger'),
-				$c->query('OCP\IConfig')
+				$c->query('OCP\IConfig'),
+				$c->query('OCP\ISession'),
+				$c->query('Hiorg_DataRetriever')
 			);
 		});
 

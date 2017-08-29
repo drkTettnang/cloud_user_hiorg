@@ -6,7 +6,7 @@
 	<version>0.3.0-alpha</version>
 	<licence>AGPL</licence>
 	<author>Klaus Herberth</author>
-	<requiremin>8.1</requiremin>
+
 	<types>
 		<authentication/>
 		<session/>
