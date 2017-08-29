@@ -10,6 +10,7 @@ use OCA\User_Hiorg\Hiorg\AndroidRestAPI;
 use OCA\User_Hiorg\Hiorg\SingleSignOn;
 use OCA\User_Hiorg\User\Proxy;
 use OCA\User_Hiorg\User\Hiorg;
+use OCA\User_Hiorg\DataRetriever;
 use OC\User\Database;
 
 class Application extends App
@@ -37,7 +38,8 @@ class Application extends App
 		$container->registerService('Hiorg_AndroidRestAPI', function (IContainer $c) {
 			return new AndroidRestAPI(
 				$c->query('Hiorg_Logger'),
-				$c->query('OCP\IConfig')
+				$c->query('OCP\IConfig'),
+				$c->query('Hiorg_DataRetriever')
 			);
 		});
 
@@ -71,6 +73,10 @@ class Application extends App
 				$c->query('Database_Backend'),
 				$c->query('Hiorg_Backend')
 			);
+		});
+
+		$container->registerService('Hiorg_DataRetriever', function (IContainer $c) {
+			return new DataRetriever();
 		});
 	}
 }

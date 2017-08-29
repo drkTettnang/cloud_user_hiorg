@@ -4,6 +4,7 @@ namespace OCA\User_Hiorg\Hiorg;
 
 use OCP\ILogger;
 use OCP\IConfig;
+use OCA\User_Hiorg\IDataRetriever;
 
 class AndroidRestAPI implements IAndroidRestAPI
 {
@@ -13,31 +14,27 @@ class AndroidRestAPI implements IAndroidRestAPI
 
 	private $logger;
 	private $config;
+	private $dataRetriever;
 
 	public function __construct(
 		ILogger $logger,
-	  IConfig $config
+	  IConfig $config,
+	  IDataRetriever $dataRetriever
 	) {
 		$this->logger = $logger;
 		$this->config = $config;
-
+		$this->dataRetriever = $dataRetriever;
 	}
 
 	public function getUserData($username, $password)
 	{
-		$ajaxcontext = stream_context_create([
-			'http' => [
-				'method' => 'POST',
-				'header' => 'Content-type: application/x-www-form-urlencoded',
-				'content' => http_build_query([
-						'username' => $username,
-						'passmd5' => md5($password),
-						'ov' => $this->config->getAppValue('user_hiorg', 'ov')
-				], '', '&')
-			]
+		$result = $this->dataRetriever->fetchUrl(self::AJAXLOGIN, [
+				'username' => $username,
+				'passmd5' => md5($password),
+				'ov' => $this->config->getAppValue('user_hiorg', 'ov')
 		]);
 
-		$ajaxresult = file_get_contents(self::AJAXLOGIN, false, $ajaxcontext);
+		$ajaxresult = $result['body'];
 
 		if ($ajaxresult === false) {
 			$this->logger->warning('Could not connect to ajax login.');
@@ -53,7 +50,7 @@ class AndroidRestAPI implements IAndroidRestAPI
 			return false;
 		}
 
-		if ($ajaxdata->status !== 'OK') {
+		if (!isset($ajaxdata->status) || $ajaxdata->status !== 'OK') {
 			$this->logger->warning('Could not login through rest api.');
 
 			return false;
