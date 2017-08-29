@@ -1,3 +1,6 @@
+<?php
+script('user_hiorg', 'settings/admin');
+?>
 <div class="section">
 	<h2>User Hiorg</h2>
 	<form id="user_hiorg">

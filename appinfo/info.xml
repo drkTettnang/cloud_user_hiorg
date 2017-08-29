@@ -17,4 +17,8 @@
 	</dependencies>
 
 	<namespace>User_Hiorg</namespace>
+
+	<settings>
+		<admin>OCA\User_Hiorg\Settings\Admin</admin>
+	</settings>
 </info>
