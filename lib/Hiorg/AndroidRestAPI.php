@@ -14,12 +14,13 @@ class AndroidRestAPI implements IAndroidRestAPI
 	private $logger;
 	private $config;
 
-	public function __constructor(
+	public function __construct(
 		ILogger $logger,
 	  IConfig $config
 	) {
 		$this->logger = $logger;
 		$this->config = $config;
+
 	}
 
 	public function getUserData($username, $password)
@@ -31,7 +32,7 @@ class AndroidRestAPI implements IAndroidRestAPI
 				'content' => http_build_query([
 						'username' => $username,
 						'passmd5' => md5($password),
-						'ov' => $this->getAppValue('user_hiorg', 'ov')
+						'ov' => $this->config->getAppValue('user_hiorg', 'ov')
 				], '', '&')
 			]
 		]);

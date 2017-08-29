@@ -23,27 +23,28 @@ class Application extends App
 
 		$container->registerService('Hiorg_Cache', function (IContainer $c) {
 			return new Cache(
-				$c->query('ServerContainer')->getDatabaseConnection()
+				$c->query('OCP\IDBConnection')
 			);
 		});
 
 		$container->registerService('Hiorg_Logger', function (IContainer $c) {
 			return new LoggerProxy(
 				$c->query('AppName'),
-				$c->query('ServerContainer')->getLogger()
+				$c->query('OCP\ILogger')
 			);
 		});
 
 		$container->registerService('Hiorg_AndroidRestAPI', function (IContainer $c) {
 			return new AndroidRestAPI(
-				$c->query('Hiorg_Logger')
+				$c->query('Hiorg_Logger'),
+				$c->query('OCP\IConfig')
 			);
 		});
 
 		$container->registerService('Hiorg_SingleSignOn', function (IContainer $c) {
 			return new SingleSignOn(
 				$c->query('Hiorg_Logger'),
-				$c->query('ServerContainer')->getConfig()
+				$c->query('OCP\IConfig')
 			);
 		});
 
@@ -56,9 +57,9 @@ class Application extends App
 				$c->query('Database_Backend'),
 				$c->query('Hiorg_Cache'),
 				$c->query('Hiorg_Logger'),
-				$c->query('ServerContainer')->getConfig(),
-				$c->query('UserManager'),
-				$c->query('GroupManager'),
+				$c->query('OCP\IConfig'),
+				$c->query('OCP\IUserManager'),
+				$c->query('OCP\IGroupManager'),
 				$c->query('Hiorg_AndroidRestAPI'),
 				$c->query('Hiorg_SingleSignOn')
 			);
