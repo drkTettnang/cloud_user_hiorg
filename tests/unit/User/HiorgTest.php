@@ -9,6 +9,7 @@ use OCP\IConfig;
 use OCP\IUserManager;
 use OCP\IUser;
 use OCP\IGroupManager;
+use OCP\IGroup;
 use OCP\UserInterface;
 use OCA\User_Hiorg\Hiorg\IAndroidRestAPI;
 use OCA\User_Hiorg\Hiorg\ISingleSignOn;
@@ -112,7 +113,72 @@ class HiorgTest extends TestCase
 		 ->expects($this->once())
 		 ->method('getUserValue')
 		 ->with('dummy_uid', 'login', 'lastLogin', 0)
-		 ->willReturn(time());
+		 ->willReturn(0);
+		$user = $this->createMock(IUser::class);
+		$user->expects($this->once())
+			->method('getUID')
+			->willReturn('dummy_uid');
+		$this->userManager
+			->expects($this->once())
+			->method('get')
+			->with('dummy_uid')
+			->willReturn($user);
+		$this->restAPI
+			->expects($this->once())
+			->method('getUserData')
+			->with('dummy_username', 'dummy_password')
+			->willReturn([
+				'env' => [
+					// group permission as bitmask
+					// dummy user is member of 1 and 4
+					'grp' => '5'
+				],
+				'grp' => [
+					[
+						'i' => '1',
+						'n' => 'Gruppe A'
+					], [
+						'i' => '4',
+						'n' => 'Gruppe B'
+					], [
+						'i' => '16',
+						'n' => 'Gruppe C'
+					]
+				]
+			]);
+		$this->groupManager
+			->expects($this->once())
+			->method('getUserGroupIds')
+			->with($user)
+			->willReturn([]);
+		$this->groupManager
+			->expects($this->exactly(3))
+			->method('groupExists')
+			->will($this->returnValueMap([
+			  ['Gruppe A', true],
+			  ['Gruppe B', true],
+			  ['Gruppe C', false]
+		  ]));
+		$this->groupManager
+			->expects($this->once())
+			->method('createGroup')
+			->with('Gruppe C');
+		$this->groupManager
+			->expects($this->exactly(2))
+			->method('isInGroup')
+			->will($this->returnValueMap([
+			  ['dummy_uid', 'Gruppe A', true],
+			  ['dummy_uid', 'Gruppe B', false]
+		  ]));
+		$groupB = $this->createMock(IGroup::class);
+		$groupB->expects($this->once())
+			->method('addUser')
+			->with($user);
+		$this->groupManager
+			->expects($this->once())
+			->method('get')
+			->with('Gruppe B')
+			->willReturn($groupB);
 
 		$result = $this->hiorg->checkPassword('dummy_username', 'dummy_password');
 
