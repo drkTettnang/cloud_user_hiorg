@@ -28,7 +28,7 @@ $ov = OCP\Config::getAppValue ( 'user_hiorg', 'ov' );
 
 OCP\App::setActiveNavigationEntry( 'user_hiorg' );
 
-$url = HIORG::SSOURL."?ov=$ov&login=1&token=$token";
+$url = OCA\user_hiorg\HIORG::SSOURL."?ov=$ov&login=1&token=$token";
 
 $tmpl = new OCP\Template( 'user_hiorg', 'main', 'user' );
 $tmpl->assign( 'url', $url );

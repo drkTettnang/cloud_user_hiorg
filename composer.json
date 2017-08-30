@@ -1,0 +1,14 @@
+{
+    "name": "drktettnang/user_hiorg",
+    "require-dev": {
+        "phpunit/phpunit": "^5.7",
+        "friendsofphp/php-cs-fixer": "^2.4"
+    },
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Klaus Herberth",
+            "email": "klaus@herberth.eu"
+        }
+    ]
+}

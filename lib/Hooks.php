@@ -20,14 +20,20 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+namespace OCA\User_Hiorg;
 
-OCP\User::checkAdminUser();
+class Hooks
+{
+	public static function logout()
+	{
+		$token = \OC::$server->getSession()->get('user_hiorg_token');
 
-OCP\Util::addScript( 'user_hiorg', 'admin' );
+		if (isset($token)) {
+			$url = \OCA\User_Hiorg\HIORG::SSOURL . "?logout=1&token=$token";
 
-$tmpl = new OCP\Template( 'user_hiorg', 'settings');
+			file_get_contents($url);
 
-$tmpl->assign('ov', OCP\Config::getAppValue ( 'user_hiorg', 'ov' ));
-
-return $tmpl->fetchPage();
-?>
+			\OC::$server->getSession()->remove('user_hiorg_token');
+		}
+	}
+}

@@ -2,15 +2,23 @@
 <info>
 	<id>user_hiorg</id>
 	<name>Hiorg Server</name>
-	<description>Integration of Hiorg-Server into OwnCloud inclusive user backend.</description>
-	<version>0.2.4</version>
+	<description>Integration of Hiorg-Server into OwnCloud/Nextcloud inclusive user backend.</description>
+	<version>0.3.0-alpha</version>
 	<licence>AGPL</licence>
 	<author>Klaus Herberth</author>
-	<requiremin>8.1</requiremin>
+
 	<types>
-       <authentication/>
+		<authentication/>
+		<session/>
    </types>
 	<dependencies>
-		<owncloud min-version="8.1.0"/>
+		<owncloud min-version="10"/>
+		<nextcloud min-version="11.0" max-version="13" />
 	</dependencies>
+
+	<namespace>User_Hiorg</namespace>
+
+	<settings>
+		<admin>OCA\User_Hiorg\Settings\Admin</admin>
+	</settings>
 </info>
