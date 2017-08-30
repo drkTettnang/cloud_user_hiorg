@@ -140,13 +140,13 @@ class Hiorg
 		}
 		$uid = $user->getUID();
 
-		$userGroups = $this->groupManager->getUserIdGroups($uid);
+		$userGroups = $this->groupManager->getUserGroupIds($user);
 		$remoteGroups = [];
-		$userGroupKey = intval($data->env->grp);
+		$userGroupKey = intval($data['env']['grp']);
 
-		foreach ($data->grp as $grp) {
-			$gid = $grp->n;
-			$gkey = intval($grp->i);
+		foreach ($data['grp'] as $grp) {
+			$gid = $grp['n'];
+			$gkey = intval($grp['i']);
 
 			if (!$this->groupManager->groupExists($gid)) {
 				$this->groupManager->createGroup($gid);

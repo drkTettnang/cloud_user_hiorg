@@ -42,7 +42,7 @@ class AndroidRestAPI implements IAndroidRestAPI
 			return false;
 		}
 
-		$ajaxdata = json_decode($ajaxresult);
+		$ajaxdata = json_decode($ajaxresult, true);
 
 		if (is_null($ajaxdata)) {
 			$this->logger->warning('Could not unserialize ajaxdata.');
@@ -50,7 +50,7 @@ class AndroidRestAPI implements IAndroidRestAPI
 			return false;
 		}
 
-		if (!isset($ajaxdata->status) || $ajaxdata->status !== 'OK') {
+		if (!isset($ajaxdata['status']) || $ajaxdata['status'] !== 'OK') {
 			$this->logger->warning('Could not login through rest api.');
 
 			return false;
