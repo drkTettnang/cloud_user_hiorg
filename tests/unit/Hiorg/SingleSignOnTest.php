@@ -4,7 +4,6 @@ namespace OCA\User_Hiorg\Tests\Hiorg;
 
 use OCP\ILogger;
 use OCP\IConfig;
-use OCP\ISession;
 use OCA\User_Hiorg\IDataRetriever;
 use OCA\User_Hiorg\Hiorg\SingleSignOn;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +14,6 @@ class SingleSignOnTest extends TestCase
 
 	private $logger;
 	private $config;
-	private $session;
 	private $dataRetriever;
 
 	private $androidRestAPI;
@@ -26,7 +24,6 @@ class SingleSignOnTest extends TestCase
 
 		$this->logger = $this->createMock(ILogger::class);
 		$this->config = $this->createMock(IConfig::class);
-		$this->session = $this->createMock(ISession::class);
 		$this->dataRetriever = $this->createMock(IDataRetriever::class);
 
 		$this->config
@@ -38,7 +35,6 @@ class SingleSignOnTest extends TestCase
 		$this->androidRestAPI = new SingleSignOn(
 			$this->logger,
 			$this->config,
-			$this->session,
 			$this->dataRetriever
 		);
 	}
@@ -179,11 +175,6 @@ class SingleSignOnTest extends TestCase
 				'Location' => 'foo.html?token='.$token
 			]
 		]);
-
-		$this->session
-			->expects($this->once())
-			->method('set')
-			->with('user_hiorg_token', $token);
 
 		$result = $this->androidRestAPI->getUserInfo('dummy_user', 'dummy_password');
 
