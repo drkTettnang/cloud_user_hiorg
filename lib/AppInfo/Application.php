@@ -47,7 +47,6 @@ class Application extends App
 			return new SingleSignOn(
 				$c->query('Hiorg_Logger'),
 				$c->query('OCP\IConfig'),
-				$c->query('OCP\ISession'),
 				$c->query('Hiorg_DataRetriever')
 			);
 		});

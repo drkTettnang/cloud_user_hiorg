@@ -4,7 +4,6 @@ namespace OCA\User_Hiorg\Hiorg;
 
 use OCP\ILogger;
 use OCP\IConfig;
-use OCP\ISession;
 use OCA\User_Hiorg\IDataRetriever;
 
 class SingleSignOn implements ISingleSignOn
@@ -13,18 +12,15 @@ class SingleSignOn implements ISingleSignOn
 
 	private $logger;
 	private $config;
-	private $session;
 	private $dataRetriever;
 
 	public function __construct(
 		ILogger $logger,
 		IConfig $config,
-		ISession $session,
 		IDataRetriever $dataRetriever
 	) {
 		$this->logger = $logger;
 		$this->config = $config;
-		$this->session = $session;
 		$this->dataRetriever = $dataRetriever;
 	}
 
@@ -80,9 +76,6 @@ class SingleSignOn implements ISingleSignOn
 
 			return false;
 		}
-
-		// save token for hiorg-server web access
-		$this->session->set('user_hiorg_token', $token);
 
 		$jsonString = base64_decode(mb_substr($result['body'], 3));
 		$userinfo = @unserialize($jsonString);

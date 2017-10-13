@@ -26,14 +26,14 @@ class Hooks
 {
 	public static function logout()
 	{
-		$token = \OC::$server->getSession()->get('user_hiorg_token');
-
-		if (isset($token)) {
-			$url = \OCA\User_Hiorg\HIORG::SSOURL . "?logout=1&token=$token";
-
-			file_get_contents($url);
-
-			\OC::$server->getSession()->remove('user_hiorg_token');
-		}
+		// $token = \OC::$server->getSession()->get('user_hiorg_token');
+		//
+		// if (isset($token)) {
+		// 	$url = \OCA\User_Hiorg\HIORG::SSOURL . "?logout=1&token=$token";
+		//
+		// 	file_get_contents($url);
+		//
+		// 	\OC::$server->getSession()->remove('user_hiorg_token');
+		// }
 	}
 }
