@@ -2,8 +2,8 @@
 <info>
 	<id>user_hiorg</id>
 	<name>Hiorg Server</name>
-	<description>Integration of Hiorg-Server into OwnCloud/Nextcloud inclusive user backend.</description>
-	<version>0.3.0-alpha</version>
+	<description>Integration of Hiorg-Server into Nextcloud inclusive user backend.</description>
+	<version>0.3.0</version>
 	<licence>AGPL</licence>
 	<author>Klaus Herberth</author>
 
