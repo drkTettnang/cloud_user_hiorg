@@ -3,7 +3,6 @@ sudo: false
 
 language: php
 php:
-  - 5.6
   - 7
 
 services:
@@ -11,7 +10,7 @@ services:
 
 env:
   global:
-    - BRANCH=master
+    - BRANCH=stable13
   matrix:
     - DB=mysql
 
@@ -21,6 +20,10 @@ matrix:
       env: DB=mysql BRANCH=stable11
     - php: 5.6
       env: DB=mysql BRANCH=stable12
+    - php: 5.6
+    - php: 7
+    - php: 7.1
+    - php: 7.2
 
 install:
  - ls
@@ -32,10 +35,11 @@ install:
  - cd ..
  - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $BRANCH nextcloud
  - mv cloud_user_hiorg nextcloud/apps/user_hiorg
- - ls
  - ./nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
  - ./nextcloud/occ app:enable user_hiorg
+ - ./nextcloud/occ status
  - cd nextcloud/apps/user_hiorg
+ - rm composer.lock
 
 # Note the install script should make sure we are in the apps/ojsxc directory
 script:
