@@ -10,10 +10,9 @@
 	<types>
 		<authentication/>
 		<session/>
-   </types>
+	</types>
 	<dependencies>
-		<owncloud min-version="10"/>
-		<nextcloud min-version="11.0" max-version="13" />
+		<nextcloud min-version="12.0" max-version="13" />
 	</dependencies>
 
 	<namespace>User_Hiorg</namespace>
