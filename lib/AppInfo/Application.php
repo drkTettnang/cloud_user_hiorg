@@ -12,6 +12,7 @@ use OCA\User_Hiorg\User\Proxy;
 use OCA\User_Hiorg\User\Hiorg;
 use OCA\User_Hiorg\DataRetriever;
 use OCA\User_Hiorg\Controller\SettingsController;
+use OCA\User_Hiorg\Controller\ViewController;
 use OC\User\Database;
 
 class Application extends App
@@ -48,6 +49,7 @@ class Application extends App
 			return new SingleSignOn(
 				$c->query('Hiorg_Logger'),
 				$c->query('OCP\IConfig'),
+				$c->getServer()->getSession(),
 				$c->query('Hiorg_DataRetriever')
 			);
 		});
@@ -89,6 +91,15 @@ class Application extends App
 				$c->query('AppName'),
 				$c->query('Request'),
 				$c->query('OCP\IConfig')
+			);
+		});
+
+		$container->registerService('ViewController', function (IContainer $c) {
+			return new ViewController(
+				$c->query('AppName'),
+				$c->query('Request'),
+				$c->query('OCP\IConfig'),
+				$c->getServer()->getSession()
 			);
 		});
 	}

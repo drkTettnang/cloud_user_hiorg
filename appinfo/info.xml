@@ -21,4 +21,12 @@
 	<settings>
 		<admin>OCA\User_Hiorg\Settings\Admin</admin>
 	</settings>
+
+	<navigations>
+        <navigation>
+            <name>Hiorg</name>
+            <route>user_hiorg.view.index</route>
+            <icon>app.svg</icon>
+        </navigation>
+    </navigations>
 </info>
