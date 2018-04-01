@@ -1,17 +1,23 @@
-$(document).ready(function() {
-
+$(function() {
    $('#user_hiorg').submit(function(event) {
       event.preventDefault();
 
       var post = $("#user_hiorg").serialize();
 
-      $.post(OC.filePath('user_hiorg', 'ajax', 'setSettings.php'), post, function(data) {
-         if (data === 'true') {
-            $('#user_hiorg .msg').text('Finished saving.');
-         } else {
+      $.ajax({
+          method: 'PUT',
+          url: OC.generateUrl('apps/user_hiorg/settings/'),
+          data: post,
+          success: function(response) {
+            if (response && response.status === 'success') {
+                $('#user_hiorg .msg').text('Finished saving.');
+            } else {
+                $('#user_hiorg .msg').text('Error!');
+            }
+          },
+          error: function() {
             $('#user_hiorg .msg').text('Error!');
-         }
+          }
       });
    });
-
 });
