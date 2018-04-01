@@ -14,7 +14,7 @@ class LoggerProxy implements ILogger
 		$this->appName = $appName;
 		$this->logger = $logger;
 	}
-   /**
+	/**
 	 * System is unusable.
 	 *
 	 * @param string $message

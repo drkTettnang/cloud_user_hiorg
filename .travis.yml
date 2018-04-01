@@ -44,8 +44,8 @@ script:
   - composer install
   - ./vendor/bin/phpunit -c phpunit.xml --coverage-clover=unit-coverage.xml
   - cat ../../data/nextcloud.log
-#  - vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
-#  - rm -r vendor/ && ../../occ app:check-code user_hiorg
+  - vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
+  - rm -r vendor/ && ../../occ app:check-code user_hiorg
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

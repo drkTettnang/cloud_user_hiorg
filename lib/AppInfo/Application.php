@@ -84,8 +84,8 @@ class Application extends App
 		});
 
 		/**
-	     * Controllers
-	     */
+		 * Controllers
+		 */
 		$container->registerService('SettingsController', function (IContainer $c) {
 			return new SettingsController(
 				$c->query('AppName'),

@@ -18,8 +18,9 @@ class ViewController extends Controller
 		$appName,
 		IRequest $request,
 		IConfig $config,
-		ISession $session)
-	{
+		ISession $session
+	
+	) {
 		parent::__construct($appName, $request);
 		
 		$this->config = $config;
