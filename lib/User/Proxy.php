@@ -18,8 +18,6 @@ class Proxy implements UserInterface
 		$this->logger = $logger;
 		$this->realBackend = $realBackend;
 		$this->hiorgBackend = $hiorgBackend;
-
-		$this->logger->info('Proxy Backend created');
 	}
 
 	public function implementsActions($actions)
@@ -67,7 +65,7 @@ class Proxy implements UserInterface
 		$this->logger->debug('Check password for '.$username);
 
 		if ($this->realBackend->userExists($username)) {
-			$this->logger->info('Use real backend.');
+			$this->logger->debug('Use real backend.');
 
 			$ret = $this->realBackend->checkPassword($username, $password);
 
@@ -75,7 +73,7 @@ class Proxy implements UserInterface
 				return $ret;
 			}
 
-			$this->logger->info('Real backend failed.');
+			$this->logger->debug('Real backend failed.');
 		}
 
 		return $this->hiorgBackend->checkPassword($username, $password);

@@ -67,7 +67,7 @@ class Hiorg
 		if ($uid) {
 			if ($this->isInTime($uid)) {
 				if ($this->realBackend->checkPassword($uid, $password)) {
-					$this->logger->info('Correct cached credentials for {username} ({uid}).', ['username' => $username, 'uid' => $uid]);
+					$this->logger->debug('Correct cached credentials for {username} ({uid}).', ['username' => $username, 'uid' => $uid]);
 
 					return $uid;
 				}
@@ -81,7 +81,7 @@ class Hiorg
 			return false;
 		}
 
-		$this->logger->info('Correct password for {username} ({uid}).', ['username' => $username, 'uid' => $userInfo['user_id']]);
+		$this->logger->debug('Correct password for {username} ({uid}).', ['username' => $username, 'uid' => $userInfo['user_id']]);
 
 		return $this->updateUser($userInfo, $username, $password);
 	}
@@ -101,9 +101,9 @@ class Hiorg
 		} else {
 			// update password
 			if ($this->realBackend->setPassword($uid, $password)) {
-				$this->logger->info("Password updated.");
+				$this->logger->debug("Password updated.");
 			} else {
-				$this->logger->info("Password update failed!");
+				$this->logger->warning("Could not update password for user ({uid})!", ['uid' => $uid]);
 			}
 		}
 
@@ -173,7 +173,7 @@ class Hiorg
 			}
 		}
 
-		$this->logger->info('Group memberships successfully synced.');
+		$this->logger->debug('Group memberships successfully synced.');
 	}
 
 	/**
