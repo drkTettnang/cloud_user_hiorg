@@ -11,6 +11,7 @@ class DataRetriever implements IDataRetriever
 			  'method' => 'POST',
 			  'ignore_errors' => '1',
 			  'header' => 'Content-type: application/x-www-form-urlencoded',
+			  'user_agent' => 'user_hiorg (nextcloud app)',
 			  'content' => http_build_query($data, '', '&')
 		  ]
 	  ]);
