@@ -22,7 +22,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function emergency($message, array $context = [])
+	public function emergency(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -36,7 +36,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function alert($message, array $context = [])
+	public function alert(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -50,7 +50,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function critical($message, array $context = [])
+	public function critical(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -65,7 +65,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function error($message, array $context = [])
+	public function error(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -79,7 +79,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function warning($message, array $context = [])
+	public function warning(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -93,7 +93,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function notice($message, array $context = [])
+	public function notice(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -107,7 +107,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function info($message, array $context = [])
+	public function info(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -121,7 +121,7 @@ class LoggerProxy implements ILogger
 	 * @return null
 	 * @since 7.0.0
 	 */
-	public function debug($message, array $context = [])
+	public function debug(string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -136,7 +136,7 @@ class LoggerProxy implements ILogger
 	 * @return mixed
 	 * @since 7.0.0
 	 */
-	public function log($level, $message, array $context = [])
+	public function log(int $level, string $message, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
@@ -158,7 +158,7 @@ class LoggerProxy implements ILogger
 	 * @return void
 	 * @since 8.2.0
 	 */
-	public function logException($exception, array $context = [])
+	public function logException(\Throwable  $exception, array $context = [])
 	{
 		$context['app'] = $this->appName;
 
