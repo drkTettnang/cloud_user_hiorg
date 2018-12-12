@@ -15,7 +15,7 @@
 	<category>security</category>
 	<bugs>https://github.com/drkTettnang/cloud_user_hiorg/issues</bugs>
 	<dependencies>
-		<nextcloud min-version="14" max-version="14" />
+		<nextcloud min-version="14" max-version="15" />
 	</dependencies>
 	<settings>
 		<admin>OCA\User_Hiorg\Settings\Admin</admin>
