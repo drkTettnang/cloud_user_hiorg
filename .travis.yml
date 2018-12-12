@@ -20,11 +20,11 @@ matrix:
     - php: 7.1
     - php: 7.2
     - php: 7
-      env: BRANCH=stable14
+      env: DB=mysql BRANCH=stable14
     - php: 7.1
-      env: BRANCH=stable14
+      env: DB=mysql BRANCH=stable14
     - php: 7.2
-      env: BRANCH=stable14
+      env: DB=mysql BRANCH=stable14
 
 install:
  - ls
