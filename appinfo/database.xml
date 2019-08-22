@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <database>
- <name>*dbname*</name>
- <create>true</create>
- <overwrite>false</overwrite>
- <charset>utf8</charset>
- <table>
-  <name>*dbprefix*user_hiorg_username_uid</name>
-  <declaration>
-     
-    <field>
-      <name>username</name>
-      <type>text</type>
-      <notnull>true</notnull>
-    </field>
-    <field>
-      <name>uid</name>
-      <type>text</type>
-      <notnull>true</notnull>
-    </field>
-  </declaration>
-</table>
+  <name>*dbname*</name>
+  <create>true</create>
+  <overwrite>false</overwrite>
+  <charset>utf8</charset>
+  <table>
+    <name>*dbprefix*user_hiorg_users</name>
+    <declaration>
+      <field>
+        <name>uid</name>
+        <type>text</type>
+        <notnull>true</notnull>
+        <primary>true</primary>
+      </field>
+      <field>
+        <name>username</name>
+        <type>text</type>
+        <notnull>true</notnull>
+      </field>
+      <field>
+        <name>password</name>
+        <type>text</type>
+        <notnull>true</notnull>
+      </field>
+      <field>
+        <name>displayname</name>
+        <type>text</type>
+      </field>
+    </declaration>
+  </table>
 </database>

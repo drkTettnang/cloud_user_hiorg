@@ -2,24 +2,17 @@
 
 namespace OCA\User_Hiorg\User;
 
-use OC\User\Backend;
-use OCP\IUserBackend;
 use OCP\ILogger;
 use OCP\IConfig;
 use OCP\IUserManager;
 use OCP\IUser;
 use OCP\IGroupManager;
-use OCA\User_Hiorg\Util\ICache;
 
 class Hiorg
 {
-	private static $userData = null;
-
 	// How long should we try our cached username-uid?
 	const TIMEOUT_CACHE = 86400; //24h
 
-	private $realBackend;
-	private $cache;
 	private $logger;
 	private $config;
 	private $userManager;
@@ -28,8 +21,6 @@ class Hiorg
 	private $singleSO;
 
 	public function __construct(
-		$realBackend,
-		ICache $cache,
 		ILogger $logger,
 		IConfig $config,
 		IUserManager $userManager,
@@ -37,8 +28,6 @@ class Hiorg
 		$restAPI,
 		$singleSO
 	) {
-		$this->realBackend = $realBackend;
-		$this->cache = $cache;
 		$this->logger = $logger;
 		$this->config = $config;
 		$this->userManager = $userManager;
@@ -47,51 +36,43 @@ class Hiorg
 		$this->singleSO = $singleSO;
 	}
 
-	public function implementsActions($actions)
+	/**
+	 * Check if we are allowed to use our cached username-uid.
+	 *
+	 * @param  {string}  $uid user id
+	 * @return boolean True if we are in our timeframe
+	 */
+	public function isInTime($uid)
 	{
-		return (bool)((Backend::CHECK_PASSWORD
-		| Backend::GET_HOME
-		| Backend::GET_DISPLAYNAME
-		// | Backend::PROVIDE_AVATAR
-		| Backend::COUNT_USERS)
-		& $actions);
+		$lastLogin = $this->config->getUserValue($uid, 'login', 'lastLogin', 0);
+
+		return ($lastLogin + self::TIMEOUT_CACHE) > time();
 	}
 
-	public function checkPassword($username, $password)
+	public function checkPassword($backend, $username, $password)
 	{
 		$this->logger->debug('Use Hiorg to check password.');
-
-		$uid = $this->cache->getUid($username);
-
-		// try cached credentials, if still valid
-		if ($uid) {
-			if ($this->isInTime($uid)) {
-				if ($this->realBackend->checkPassword($uid, $password)) {
-					$this->logger->debug('Correct cached credentials for {username} ({uid}).', ['username' => $username, 'uid' => $uid]);
-
-					return $uid;
-				}
-			}
-		}
 
 		// request user information via sso
 		$userInfo = $this->singleSO->getUserInfo($username, $password);
 
 		if ($userInfo === false) {
+			$this->logger->info('Wrong Hiorg password for {username}.', ['username' => $username]);
+
 			return false;
 		}
 
 		$this->logger->debug('Correct password for {username} ({uid}).', ['username' => $username, 'uid' => $userInfo['user_id']]);
 
-		return $this->updateUser($userInfo, $username, $password);
+		return $this->updateUser($backend, $userInfo, $username, $password);
 	}
 
-	private function updateUser($userinfo, $username, $password)
+	private function updateUser($backend, $userinfo, $username, $password)
 	{
 		$uid = $userinfo ['user_id'];
 
-		if (! $this->realBackend->userExists($uid)) {
-			if ($this->realBackend->createUser($uid, $password)) {
+		if (! $backend->userExists($uid)) {
+			if ($backend->createUser($uid, $username, $password)) {
 				$this->logger->info('New user ({uid}) created.', ['uid' => $uid]);
 			} else {
 				$this->logger->warning('Could not create user ({uid}).', ['uid' => $uid]);
@@ -100,17 +81,15 @@ class Hiorg
 			}
 		} else {
 			// update password
-			if ($this->realBackend->setPassword($uid, $password)) {
+			if ($backend->setPassword($uid, $password)) {
 				$this->logger->debug("Password updated.");
 			} else {
 				$this->logger->warning("Could not update password for user ({uid})!", ['uid' => $uid]);
 			}
 		}
 
-		$this->cache->setUid($username, $uid);
-
 		// set display name
-		$this->realBackend->setDisplayName($uid, $userinfo ['vorname'] . ' ' . $userinfo ['name']);
+		$backend->setDisplayName($uid, $userinfo ['vorname'] . ' ' . $userinfo ['name']);
 
 		// set email address
 		$this->config->setUserValue($uid, 'settings', 'email', $userinfo['email']);
@@ -174,18 +153,5 @@ class Hiorg
 		}
 
 		$this->logger->debug('Group memberships successfully synced.');
-	}
-
-	/**
-	* Check if we are allowed to use our cached username-uid.
-	*
-	* @param  {string}  $uid user id
-	* @return boolean True if we are in our timeframe
-	*/
-	private function isInTime($uid)
-	{
-		$lastLogin = $this->config->getUserValue($uid, 'login', 'lastLogin', 0);
-
-		return ($lastLogin + self::TIMEOUT_CACHE) > time();
 	}
 }

@@ -4,7 +4,6 @@ namespace OCA\User_Hiorg\AppInfo;
 
 use OCP\AppFramework\App;
 use OCP\IContainer;
-use OCA\User_Hiorg\Util\Cache;
 use OCA\User_Hiorg\Util\LoggerProxy;
 use OCA\User_Hiorg\Hiorg\AndroidRestAPI;
 use OCA\User_Hiorg\Hiorg\SingleSignOn;
@@ -17,18 +16,10 @@ use OC\User\Database;
 
 class Application extends App
 {
-	private static $config = [];
-
 	public function __construct(array $urlParams = [])
 	{
 		parent::__construct('user_hiorg', $urlParams);
 		$container = $this->getContainer();
-
-		$container->registerService('Hiorg_Cache', function (IContainer $c) {
-			return new Cache(
-				$c->query('OCP\IDBConnection')
-			);
-		});
 
 		$container->registerService('Hiorg_Logger', function (IContainer $c) {
 			return new LoggerProxy(
@@ -60,8 +51,6 @@ class Application extends App
 
 		$container->registerService('Hiorg_Backend', function (IContainer $c) {
 			return new Hiorg(
-				$c->query('Database_Backend'),
-				$c->query('Hiorg_Cache'),
 				$c->query('Hiorg_Logger'),
 				$c->query('OCP\IConfig'),
 				$c->query('OCP\IUserManager'),
@@ -73,9 +62,10 @@ class Application extends App
 
 		$container->registerService('Proxy_Backend', function (IContainer $c) {
 			return new Proxy(
+				$c->query('Hiorg_Backend'),
 				$c->query('Hiorg_Logger'),
-				$c->query('Database_Backend'),
-				$c->query('Hiorg_Backend')
+				$c->query('OCP\IDBConnection'),
+				$c->query('OCP\IConfig')
 			);
 		});
 
