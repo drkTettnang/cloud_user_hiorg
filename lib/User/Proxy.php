@@ -223,7 +223,7 @@ class Proxy extends ABackend implements
 	/**
 	 * @inheritdoc
 	 */
-	public function getHome($uid)
+	public function getHome(string $uid)
 	{
 		if ($this->userExists($uid)) {
 			$root = \OC::$server->getConfig()->getSystemValue('datadirectory', \OC::$SERVERROOT . '/data');
