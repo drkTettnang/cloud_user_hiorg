@@ -13,8 +13,8 @@ use OCP\IGroup;
 use OCP\UserInterface;
 use OCA\User_Hiorg\Hiorg\IAndroidRestAPI;
 use OCA\User_Hiorg\Hiorg\ISingleSignOn;
-use OCA\User_Hiorg\Util\ICache;
 use OCA\User_Hiorg\User\Hiorg;
+use OCA\User_Hiorg\User\Proxy;
 use PHPUnit\Framework\TestCase;
 
 interface IBackend extends IUserBackend, UserInterface
@@ -27,8 +27,6 @@ interface IBackend extends IUserBackend, UserInterface
 
 class HiorgTest extends TestCase
 {
-	private $realBackend;
-	private $cache;
 	private $logger;
 	private $config;
 	private $userManager;
@@ -41,8 +39,6 @@ class HiorgTest extends TestCase
 	{
 		parent::setUp();
 
-		$this->realBackend = $this->createMock(IBackend::class);
-		$this->cache = $this->createMock(ICache::class);
 		$this->logger = $this->createMock(ILogger::class);
 		$this->config = $this->createMock(IConfig::class);
 		$this->userManager = $this->createMock(IUserManager::class);
@@ -51,8 +47,6 @@ class HiorgTest extends TestCase
 		$this->singleSO = $this->createMock(ISingleSignOn::class);
 
 		$this->hiorg = new Hiorg(
-			$this->realBackend,
-			$this->cache,
 			$this->logger,
 			$this->config,
 			$this->userManager,
@@ -62,21 +56,20 @@ class HiorgTest extends TestCase
 		);
 	}
 
-	public function testImplementsActions()
-	{
-		$this->assertTrue($this->hiorg->implementsActions(Backend::CHECK_PASSWORD));
-		$this->assertTrue($this->hiorg->implementsActions(Backend::GET_HOME));
-		$this->assertTrue($this->hiorg->implementsActions(Backend::GET_DISPLAYNAME));
-		$this->assertTrue($this->hiorg->implementsActions(Backend::COUNT_USERS));
-	}
-
 	public function testCheckValidPasswordNotCachedAndNotExists()
 	{
-		$this->cache
-		 ->expects($this->once())
-		 ->method('getUid')
-		 ->with('dummy_username')
-		 ->willReturn(false);
+		$backend = $this->createMock(Proxy::class);
+		$backend->expects($this->once())
+			->method('userExists')
+			->with('dummy_uid')
+			->willReturn(false);
+		$backend->expects($this->once())
+			->method('createUser')
+			->with('dummy_uid', 'dummy_username', 'dummy_password')
+			->willReturn(true);
+		$backend->expects($this->once())
+			->method('setDisplayName')
+			->with('dummy_uid', 'dummy_first dummy_last');
 		$this->singleSO
 		 ->expects($this->once())
 		 ->method('getUserInfo')
@@ -87,24 +80,6 @@ class HiorgTest extends TestCase
 			'name' => 'dummy_last',
 			'email' => 'dummy@email'
 		 ]);
-		$this->realBackend
-		 ->expects($this->once())
-		 ->method('userExists')
-		 ->with('dummy_uid')
-		 ->willReturn(false);
-		$this->realBackend
-		 ->expects($this->once())
-		 ->method('createUser')
-		 ->with('dummy_uid', 'dummy_password')
-		 ->willReturn(true);
-		$this->cache
-		 ->expects($this->once())
-		 ->method('setUid')
-		 ->with('dummy_username', 'dummy_uid');
-		$this->realBackend
-		 ->expects($this->once())
-		 ->method('setDisplayName')
-		 ->with('dummy_uid', 'dummy_first dummy_last');
 		$this->config
 		 ->expects($this->once())
 		 ->method('setUserValue')
@@ -180,76 +155,21 @@ class HiorgTest extends TestCase
 			->with('Gruppe B')
 			->willReturn($groupB);
 
-		$result = $this->hiorg->checkPassword('dummy_username', 'dummy_password');
-
-		$this->assertEquals('dummy_uid', $result);
-	}
-
-	public function testCheckValidPasswordCached()
-	{
-		$this->cache
-		 ->expects($this->once())
-		 ->method('getUid')
-		 ->with('dummy_username')
-		 ->willReturn('dummy_uid');
-		$this->realBackend
-		 ->expects($this->once())
-		 ->method('checkPassword')
-		 ->with('dummy_uid', 'dummy_password')
-		 ->willReturn(true);
-		$this->config
-		 ->expects($this->once())
-		 ->method('getUserValue')
-		 ->with('dummy_uid', 'login', 'lastLogin', 0)
-		 ->willReturn(time());
-
-		$result = $this->hiorg->checkPassword('dummy_username', 'dummy_password');
+		$result = $this->hiorg->checkPassword($backend, 'dummy_username', 'dummy_password');
 
 		$this->assertEquals('dummy_uid', $result);
 	}
 
 	public function testCheckInvalidPasswordNotCached()
 	{
-		$this->cache
-		 ->expects($this->once())
-		 ->method('getUid')
-		 ->with('dummy_username')
-		 ->willReturn(false);
+		$backend = $this->createMock(Proxy::class);
 		$this->singleSO
 		 ->expects($this->once())
 		 ->method('getUserInfo')
 		 ->with('dummy_username', 'dummy_password')
 		 ->willReturn(false);
 
-		$result = $this->hiorg->checkPassword('dummy_username', 'dummy_password');
-
-		$this->assertFalse($result);
-	}
-
-	public function testCheckInvalidPasswordCached()
-	{
-		$this->cache
-		 ->expects($this->once())
-		 ->method('getUid')
-		 ->with('dummy_username')
-		 ->willReturn('dummy_uid');
-		$this->realBackend
-		 ->expects($this->once())
-		 ->method('checkPassword')
-		 ->with('dummy_uid', 'dummy_password')
-		 ->willReturn(false);
-		$this->config
-		 ->expects($this->once())
-		 ->method('getUserValue')
-		 ->with('dummy_uid', 'login', 'lastLogin', 0)
-		 ->willReturn(time());
-		$this->singleSO
-		 ->expects($this->once())
-		 ->method('getUserInfo')
-		 ->with('dummy_username', 'dummy_password')
-		 ->willReturn(false);
-
-		$result = $this->hiorg->checkPassword('dummy_username', 'dummy_password');
+		$result = $this->hiorg->checkPassword($backend, 'dummy_username', 'dummy_password');
 
 		$this->assertFalse($result);
 	}
