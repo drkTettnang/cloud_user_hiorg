@@ -29,7 +29,7 @@ class Proxy extends ABackend implements
 	  IDBConnection $database,
 	  IConfig $config
    ) {
-	    $this->hiorg = $hiorg;
+		$this->hiorg = $hiorg;
 		$this->logger = $logger;
 		$this->database = $database;
 		$this->config = $config;
@@ -83,7 +83,8 @@ class Proxy extends ABackend implements
 	/**
 	 * @inheritdoc
 	 */
-	public function setPassword(string $uid, string $password): bool {
+	public function setPassword(string $uid, string $password): bool
+	{
 		if (!$this->userExists($uid)) {
 			return false;
 		}
@@ -96,7 +97,8 @@ class Proxy extends ABackend implements
 		return $this->updatePassword($uid, $hashedPassword);
 	}
 
-	public function setDisplayName(string $uid, string $displayName): bool {
+	public function setDisplayName(string $uid, string $displayName): bool
+	{
 		if (!$this->userExists($uid)) {
 			return false;
 		}
@@ -164,7 +166,8 @@ class Proxy extends ABackend implements
 			->from($this->table)
 			->where(
 				$qb->expr()->eq(
-					'username', $qb->createNamedParameter($username)
+					'username',
+					$qb->createNamedParameter($username)
 				)
 			);
 
@@ -263,7 +266,8 @@ class Proxy extends ABackend implements
 		return "HiOrg";
 	}
 
-	private function loadUser(string $uid) {
+	private function loadUser(string $uid)
+	{
 		if (isset($this->cache[$uid])) {
 			return true;
 		}
@@ -279,7 +283,8 @@ class Proxy extends ABackend implements
 			->from($this->table)
 			->where(
 				$qb->expr()->eq(
-					'uid', $qb->createNamedParameter($uid)
+					'uid',
+					$qb->createNamedParameter($uid)
 				)
 			);
 		$result = $qb->execute();
@@ -298,7 +303,8 @@ class Proxy extends ABackend implements
 		}
 	}
 
-	private function updatePassword(string $uid, string $passwordHash): bool {
+	private function updatePassword(string $uid, string $passwordHash): bool
+	{
 		$query = $this->database->getQueryBuilder();
 		$query->update($this->table)
 			->set('password', $query->createNamedParameter($passwordHash))
