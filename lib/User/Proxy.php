@@ -24,10 +24,10 @@ class Proxy extends ABackend implements
 	private $config;
 
 	public function __construct(
-	  $hiorg,
-	  ILogger $logger,
-	  IDBConnection $database,
-	  IConfig $config
+		$hiorg,
+		ILogger $logger,
+		IDBConnection $database,
+		IConfig $config
    ) {
 		$this->hiorg = $hiorg;
 		$this->logger = $logger;

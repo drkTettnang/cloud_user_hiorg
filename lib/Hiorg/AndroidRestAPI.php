@@ -18,8 +18,8 @@ class AndroidRestAPI implements IAndroidRestAPI
 
 	public function __construct(
 		ILogger $logger,
-	  IConfig $config,
-	  IDataRetriever $dataRetriever
+		IConfig $config,
+		IDataRetriever $dataRetriever
 	) {
 		$this->logger = $logger;
 		$this->config = $config;
