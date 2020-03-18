@@ -5,7 +5,7 @@
 	<name>Hiorg Server</name>
 	<summary>HiOrg user authentication</summary>
 	<description>Integration of Hiorg-Server into Nextcloud inclusive user backend.</description>
-	<version>0.5.0-alpha</version>
+	<version>0.5.0</version>
 	<licence>agpl</licence>
 	<author>Klaus Herberth</author>
 	<namespace>User_Hiorg</namespace>
