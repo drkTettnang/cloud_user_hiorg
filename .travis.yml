@@ -3,27 +3,28 @@ sudo: false
 
 language: php
 php:
-  - 7
+  - 7.2
 
 services:
   - mysql
 
 env:
   global:
-    - BRANCH=stable16
+    - BRANCH=stable18
   matrix:
     - DB=mysql
 
 matrix:
   include:
-    - php: 7.1
+    - php: 7.3
     - php: 7.2
-    - php: 7
-      env: DB=mysql BRANCH=stable15
-    - php: 7.1
-      env: DB=mysql BRANCH=stable15
+      env: DB=mysql BRANCH=stable16
+    - php: 7.3
+      env: DB=mysql BRANCH=stable16
     - php: 7.2
-      env: DB=mysql BRANCH=stable15
+      env: DB=mysql BRANCH=stable17
+    - php: 7.3
+      env: DB=mysql BRANCH=stable17
 
 install:
  - ls
