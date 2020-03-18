@@ -28,7 +28,7 @@ class Proxy extends ABackend implements
 		ILogger $logger,
 		IDBConnection $database,
 		IConfig $config
-   ) {
+	) {
 		$this->hiorg = $hiorg;
 		$this->logger = $logger;
 		$this->database = $database;
