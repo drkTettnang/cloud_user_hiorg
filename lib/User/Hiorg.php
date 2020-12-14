@@ -137,7 +137,7 @@ class Hiorg
 				if (!$this->groupManager->isInGroup($uid, $gid)) {
 					$group = $this->groupManager->get($gid);
 
-					if($group) {
+					if ($group) {
 						$group->addUser($user);
 					}
 				}

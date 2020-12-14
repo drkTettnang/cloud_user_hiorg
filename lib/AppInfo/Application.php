@@ -15,7 +15,8 @@ class Application extends App
 		parent::__construct(self::ID, $urlParams);
 	}
 
-	public function registerBackend() {
+	public function registerBackend()
+	{
 		$container = $this->getContainer();
 
 		$userProxy = $container->query(Proxy::class);
