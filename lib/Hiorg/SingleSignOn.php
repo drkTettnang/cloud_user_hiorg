@@ -4,8 +4,7 @@ namespace OCA\User_Hiorg\Hiorg;
 
 use OCP\ILogger;
 use OCP\IConfig;
-use OCP\ISession;
-use OCA\User_Hiorg\IDataRetriever;
+use OCA\User_Hiorg\DataRetriever;
 
 class SingleSignOn implements ISingleSignOn
 {
@@ -13,25 +12,18 @@ class SingleSignOn implements ISingleSignOn
 
 	private $logger;
 	private $config;
-	private $session;
 	private $dataRetriever;
 
 	public function __construct(
 		ILogger $logger,
 		IConfig $config,
-		ISession $session,
-		IDataRetriever $dataRetriever
+		DataRetriever $dataRetriever
 	) {
 		$this->logger = $logger;
 		$this->config = $config;
-		$this->session = $session;
 		$this->dataRetriever = $dataRetriever;
 	}
 
-
-	/**
-	 * @UseSession
-	 */
 	public function getUserInfo($username, $password)
 	{
 		$ov = $this->config->getAppValue('user_hiorg', 'ov');

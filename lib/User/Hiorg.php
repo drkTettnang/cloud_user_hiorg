@@ -7,6 +7,8 @@ use OCP\IConfig;
 use OCP\IUserManager;
 use OCP\IUser;
 use OCP\IGroupManager;
+use OCA\User_Hiorg\Hiorg\AndroidRestAPI;
+use OCA\User_Hiorg\Hiorg\SingleSignOn;
 
 class Hiorg
 {
@@ -25,8 +27,8 @@ class Hiorg
 		IConfig $config,
 		IUserManager $userManager,
 		IGroupManager $groupManager,
-		$restAPI,
-		$singleSO
+		AndroidRestAPI $restAPI,
+		SingleSignOn $singleSO
 	) {
 		$this->logger = $logger;
 		$this->config = $config;

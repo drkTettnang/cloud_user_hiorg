@@ -3,7 +3,6 @@ namespace OCA\User_Hiorg\Controller;
 
 use OCP\IRequest;
 use OCP\IConfig;
-use OCP\ISession;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Controller;
@@ -12,18 +11,15 @@ use OCA\User_Hiorg\Hiorg\SingleSignOn;
 class ViewController extends Controller
 {
 	private $config;
-	private $session;
-	
+
 	public function __construct(
 		$appName,
 		IRequest $request,
-		IConfig $config,
-		ISession $session
+		IConfig $config
 	) {
 		parent::__construct($appName, $request);
-		
+
 		$this->config = $config;
-		$this->session = $session;
 	}
 
 	/**
@@ -38,7 +34,7 @@ class ViewController extends Controller
 
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain(SingleSignOn::SSOURL);
-		
+
 		$response = new TemplateResponse('user_hiorg', 'view/index', ['url' => $url]);
 		$response->setContentSecurityPolicy($csp);
 

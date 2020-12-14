@@ -11,6 +11,7 @@ use OCP\User\Backend\ICheckPasswordBackend;
 use OCP\User\Backend\ICountUsersBackend;
 use OCP\User\Backend\IGetDisplayNameBackend;
 use OCP\User\Backend\IGetHomeBackend;
+use OCA\User_Hiorg\User\Hiorg;
 
 class Proxy extends ABackend implements
 	ICheckPasswordBackend,
@@ -24,7 +25,7 @@ class Proxy extends ABackend implements
 	private $config;
 
 	public function __construct(
-		$hiorg,
+		Hiorg $hiorg,
 		ILogger $logger,
 		IDBConnection $database,
 		IConfig $config

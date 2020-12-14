@@ -4,7 +4,7 @@ namespace OCA\User_Hiorg\Hiorg;
 
 use OCP\ILogger;
 use OCP\IConfig;
-use OCA\User_Hiorg\IDataRetriever;
+use OCA\User_Hiorg\DataRetriever;
 
 class AndroidRestAPI implements IAndroidRestAPI
 {
@@ -19,7 +19,7 @@ class AndroidRestAPI implements IAndroidRestAPI
 	public function __construct(
 		ILogger $logger,
 		IConfig $config,
-		IDataRetriever $dataRetriever
+		DataRetriever $dataRetriever
 	) {
 		$this->logger = $logger;
 		$this->config = $config;
