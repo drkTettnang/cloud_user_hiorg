@@ -1,9 +1,9 @@
-dist: trusty
-sudo: false
-
+dist: bionic
 language: php
 php:
   - 7.2
+  - 7.3
+  - 7.4
 
 services:
   - mysql
@@ -16,36 +16,46 @@ env:
 
 matrix:
   include:
-    - php: 7.4
+    - php: 7.2
     - php: 7.3
+    - php: 7.4
     - php: 7.2
       env: DB=mysql BRANCH=stable19
     - php: 7.3
       env: DB=mysql BRANCH=stable19
 
-install:
- - ls
- - which mysql && until mysql -u root -e "show status" &>/dev/null; do sleep 1; done
- - createuser -U travis -s oc_autotest
- - mysql -e 'create database oc_autotest;'
- - mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"
- - mysql -u root -e "grant all on oc_autotest.* to 'oc_autotest'@'localhost';"
- - cd ..
- - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $BRANCH nextcloud
- - mv cloud_user_hiorg nextcloud/apps/user_hiorg
- - ./nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --database-pass --admin-user admin --admin-pass admin --database $DB
- - ./nextcloud/occ app:enable user_hiorg
- - ./nextcloud/occ status
- - cd nextcloud/apps/user_hiorg
- - rm composer.lock
+before_install:
+  - php --info
 
-# Note the install script should make sure we are in the apps/ojsxc directory
+  # Set up DB
+  - if [[ "$DB" == 'pgsql' ]]; then createuser -U travis -s oc_autotest; fi
+  - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e 'create database oc_autotest;'; fi
+  - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "CREATE USER 'oc_autotest'@'localhost' IDENTIFIED BY '';"; fi
+  - if [[ "$DB" == 'mysql' ]]; then mysql -u root -e "GRANT ALL ON oc_autotest.* TO 'oc_autotest'@'localhost';"; fi
+
+  - cd ..
+  - git clone https://github.com/nextcloud/server.git --recursive --depth 1 -b $BRANCH nextcloud
+  - mv cloud_user_hiorg nextcloud/apps/user_hiorg
+
+before_script:
+  # Set up core
+  - php -f nextcloud/occ maintenance:install --database-name oc_autotest --database-user oc_autotest --admin-user admin --admin-pass admin --database $DB --database-pass=''
+
+  # Set up app
+  - php -f nextcloud/occ app:enable user_hiorg
+  # Enable app twice to check occ errors of registered commands
+  - php -f nextcloud/occ app:enable user_hiorg
+
+  - cd nextcloud/apps/user_hiorg
+
 script:
+  - php -f ../../occ app:check-code user_hiorg
+
   - composer install
   - ./vendor/bin/phpunit -c phpunit.xml --coverage-clover=unit-coverage.xml
+  - ./vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
+
   - cat ../../data/nextcloud.log
-  - vendor/bin/php-cs-fixer fix --dry-run --using-cache=no
-  - rm -r vendor/ && ../../occ app:check-code user_hiorg
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
