@@ -135,7 +135,9 @@ class Hiorg
 				if (!$this->groupManager->isInGroup($uid, $gid)) {
 					$group = $this->groupManager->get($gid);
 
-					$group->addUser($user);
+					if($group) {
+						$group->addUser($user);
+					}
 				}
 
 				$remoteGroups[] = $gid;
