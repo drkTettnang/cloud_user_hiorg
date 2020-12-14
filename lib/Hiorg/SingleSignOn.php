@@ -28,6 +28,12 @@ class SingleSignOn implements ISingleSignOn
 	{
 		$ov = $this->config->getAppValue('user_hiorg', 'ov');
 
+		if (empty($ov)) {
+			$this->logger->warning('No OV provided. Please set OV via admin settings.');
+
+			return false;
+		}
+
 		$reqUserinfo = [
 			'name',
 			'vorname',
