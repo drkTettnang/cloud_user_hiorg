@@ -69,21 +69,6 @@ class SingleSignOn implements ISingleSignOn
 			return false;
 		}
 
-		$token = null;
-		if (isset($result['headers']['Location'])) {
-			parse_str(parse_url($result['headers']['Location'], PHP_URL_QUERY), $query);
-
-			if (isset($query['token']) && preg_match('/^[0-9a-z_\-]+$/i', $query['token'])) {
-				$token = $query['token'];
-			}
-		}
-
-		if ($token === null) {
-			$this->logger->warning('No token provided');
-
-			return false;
-		}
-
 		$jsonString = base64_decode(mb_substr($result['body'], 3));
 		$userinfo = @unserialize($jsonString);
 
