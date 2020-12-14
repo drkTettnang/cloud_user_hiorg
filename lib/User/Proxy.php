@@ -269,13 +269,13 @@ class Proxy extends ABackend implements
 	private function loadUser(string $uid)
 	{
 		if (isset($this->cache[$uid])) {
-			return true;
+			return;
 		}
 
 		//guests $uid could be NULL or ''
 		if ($uid === '') {
 			$this->cache[$uid] = false;
-			return true;
+			return;
 		}
 
 		$qb = $this->database->getQueryBuilder();
@@ -296,10 +296,6 @@ class Proxy extends ABackend implements
 		if ($row !== false) {
 			$this->cache[$uid]['uid'] = (string)$row['uid'];
 			$this->cache[$uid]['displayname'] = (string)$row['displayname'];
-		} else {
-			$this->logger->warning("Could not load user with uid $uid");
-
-			return false;
 		}
 	}
 
