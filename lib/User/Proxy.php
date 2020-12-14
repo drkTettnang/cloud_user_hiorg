@@ -122,6 +122,10 @@ class Proxy extends ABackend implements
 
 		$this->loadUser($uid);
 
+		if ($this->cache[$uid] === false) {
+			return $uid;
+		}
+
 		if (!empty($this->cache[$uid]['displayname'])) {
 			return $this->cache[$uid]['displayname'];
 		}
