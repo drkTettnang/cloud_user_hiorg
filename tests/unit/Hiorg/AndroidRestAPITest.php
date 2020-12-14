@@ -4,7 +4,7 @@ namespace OCA\User_Hiorg\Tests\Hiorg;
 
 use OCP\ILogger;
 use OCP\IConfig;
-use OCA\User_Hiorg\IDataRetriever;
+use OCA\User_Hiorg\DataRetriever;
 use OCA\User_Hiorg\Hiorg\AndroidRestAPI;
 use PHPUnit\Framework\TestCase;
 
@@ -18,13 +18,13 @@ class AndroidRestAPITest extends TestCase
 
 	private $androidRestAPI;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
 		$this->logger = $this->createMock(ILogger::class);
 		$this->config = $this->createMock(IConfig::class);
-		$this->dataRetriever = $this->createMock(IDataRetriever::class);
+		$this->dataRetriever = $this->createMock(DataRetriever::class);
 
 		$this->androidRestAPI = new AndroidRestAPI(
 			$this->logger,

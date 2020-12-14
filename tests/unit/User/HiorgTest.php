@@ -11,8 +11,8 @@ use OCP\IUser;
 use OCP\IGroupManager;
 use OCP\IGroup;
 use OCP\UserInterface;
-use OCA\User_Hiorg\Hiorg\IAndroidRestAPI;
-use OCA\User_Hiorg\Hiorg\ISingleSignOn;
+use OCA\User_Hiorg\Hiorg\AndroidRestAPI;
+use OCA\User_Hiorg\Hiorg\SingleSignOn;
 use OCA\User_Hiorg\User\Hiorg;
 use OCA\User_Hiorg\User\Proxy;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +35,7 @@ class HiorgTest extends TestCase
 	private $singleSO;
 	private $hiorg;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
@@ -43,8 +43,8 @@ class HiorgTest extends TestCase
 		$this->config = $this->createMock(IConfig::class);
 		$this->userManager = $this->createMock(IUserManager::class);
 		$this->groupManager = $this->createMock(IGroupManager::class);
-		$this->restAPI = $this->createMock(IAndroidRestAPI::class);
-		$this->singleSO = $this->createMock(ISingleSignOn::class);
+		$this->restAPI = $this->createMock(AndroidRestAPI::class);
+		$this->singleSO = $this->createMock(SingleSignOn::class);
 
 		$this->hiorg = new Hiorg(
 			$this->logger,

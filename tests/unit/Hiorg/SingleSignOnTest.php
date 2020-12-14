@@ -4,8 +4,7 @@ namespace OCA\User_Hiorg\Tests\Hiorg;
 
 use OCP\ILogger;
 use OCP\IConfig;
-use OCP\ISession;
-use OCA\User_Hiorg\IDataRetriever;
+use OCA\User_Hiorg\DataRetriever;
 use OCA\User_Hiorg\Hiorg\SingleSignOn;
 use PHPUnit\Framework\TestCase;
 
@@ -15,19 +14,17 @@ class SingleSignOnTest extends TestCase
 
 	private $logger;
 	private $config;
-	private $session;
 	private $dataRetriever;
 
 	private $androidRestAPI;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
 		$this->logger = $this->createMock(ILogger::class);
 		$this->config = $this->createMock(IConfig::class);
-		$this->session = $this->createMock(ISession::class);
-		$this->dataRetriever = $this->createMock(IDataRetriever::class);
+		$this->dataRetriever = $this->createMock(DataRetriever::class);
 
 		$this->config
 			->expects($this->once())
@@ -38,7 +35,6 @@ class SingleSignOnTest extends TestCase
 		$this->androidRestAPI = new SingleSignOn(
 			$this->logger,
 			$this->config,
-			$this->session,
 			$this->dataRetriever
 		);
 	}
@@ -61,36 +57,6 @@ class SingleSignOnTest extends TestCase
 			'body' => 'foo'
 		]);
 		$this->mockLogInfo('Wrong HIORG password.');
-
-		$result = $this->androidRestAPI->getUserInfo('dummy_user', 'dummy_password');
-
-		$this->assertFalse($result);
-	}
-
-	public function testMissingToken()
-	{
-		$this->mockDataRetriever([
-			'body' => 'OK:',
-			'headers' => [
-				'Location' => 'foo'
-			]
-		]);
-		$this->mockLogWarning('No token provided');
-
-		$result = $this->androidRestAPI->getUserInfo('dummy_user', 'dummy_password');
-
-		$this->assertFalse($result);
-	}
-
-	public function testInvalidToken()
-	{
-		$this->mockDataRetriever([
-			'body' => 'OK:',
-			'headers' => [
-				'Location' => 'foo.html?token=%$sdf23'
-			]
-		]);
-		$this->mockLogWarning('No token provided');
 
 		$result = $this->androidRestAPI->getUserInfo('dummy_user', 'dummy_password');
 
