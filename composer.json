@@ -10,5 +10,10 @@
             "name": "Klaus Herberth",
             "email": "klaus@herberth.eu"
         }
-    ]
+    ],
+    "config": {
+        "platform": {
+            "php": "^7.4"
+        }
+    }
 }
